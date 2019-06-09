@@ -9,6 +9,8 @@ import {
 } from 'react-icons/fa'
 
 import api from './api'
+import utils from './utils/common'
+
 import Currency from './Currency'
 
 class Header extends Component {
@@ -40,52 +42,8 @@ class Content extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      toValue: "",
-      fromValue: "",
       baseCurrency: this.props.baseCurrency
     }
-  }
-
-  handleValueChange = (event) => {
-    const { toCurrency, fromCurrency } = this.props
-    const { name, value } = event.target
-    const { data } = event.nativeEvent
-    if (data !== " " && (data >= 0 || data <= 9 || data === "," || data === ".")) {
-      let replaceComma = value.replace(",", ".")
-      switch (name) {
-        case "from-value":
-          this.setState({
-            fromValue: replaceComma,
-            toValue: this.truncateValue(fromCurrency.exchange(replaceComma, toCurrency), 3)
-          })
-          break;
-        case "to-value":
-          this.setState({
-            toValue: replaceComma,
-            fromValue: this.truncateValue(toCurrency.exchange(replaceComma, fromCurrency), 3)
-          })
-          break;
-        default:
-          console.log("Default, unused case. There was no matching field name.")
-      }
-    }
-  }
-
-  swapCurrencies = () => {
-    const { fromValue, toValue } = this.state
-    this.setState({
-      toValue: fromValue,
-      fromValue: toValue
-    })
-    this.props.swapCurrencies()
-  }
-
-  changeCurrency = (event) => {
-    this.props.changeCurrency(event)
-  }
-
-  truncateValue = (value, significantDigits) => {
-    return parseFloat(value).toFixed(significantDigits).toString()
   }
 
   render() {
@@ -99,10 +57,10 @@ class Content extends Component {
               spellCheck="false"
               placeholder="0"
               name="from-value"
-              onChange={this.handleValueChange}
-              value={this.state.fromValue}
+              onChange={this.props.handleValueChange}
+              value={this.props.fromValue}
             />
-            <button className="currency-button" name="from-currency" onClick={this.changeCurrency}>
+            <button className="currency-button" name="from-currency" onClick={this.props.changeCurrency}>
               <span className="currency-button-text">
                 {fromCurrency ? fromCurrency.name : "USD"}
               </span>
@@ -113,7 +71,7 @@ class Content extends Component {
           </div>
 
           <div className="change-currency-container">
-            <span className="change-icon-container" onClick={this.swapCurrencies}>
+            <span className="change-icon-container" onClick={this.props.swapCurrencies}>
               <FaExchangeAlt className="change-icon" />
             </span>
           </div>
@@ -124,10 +82,10 @@ class Content extends Component {
               spellCheck="false"
               placeholder="0"
               name="to-value"
-              onChange={this.handleValueChange}
-              value={this.state.toValue}
+              onChange={this.props.handleValueChange}
+              value={this.props.toValue}
             />
-            <button className="currency-button" name="to-currency" onClick={this.changeCurrency}>
+            <button className="currency-button" name="to-currency" onClick={this.props.changeCurrency}>
               <span className="currency-button-text">
                 {toCurrency ? toCurrency.name : "USD"}
               </span>
@@ -138,11 +96,11 @@ class Content extends Component {
           </div>
           <div className="result-info-container">
             <p className="result-info">
-              1 {fromCurrency ? fromCurrency.name : "USD"} is {fromCurrency ? this.truncateValue(fromCurrency.exchange(1, toCurrency), 3) : "0"} {toCurrency ? toCurrency.name : "SEK"}
+              1 {fromCurrency ? fromCurrency.name : "USD"} is {fromCurrency ? utils.truncateValue(fromCurrency.exchange(1, toCurrency), 8) : "0"} {toCurrency ? toCurrency.name : "SEK"}
             </p>
           </div>
           <div className="reset-container">
-            <button className="reset-button">
+            <button className="reset-button" onClick={this.props.resetFields}>
               <span className="reset-text">Reset</span>
               <span className="reset-icon-container">
                 <FaUndoAlt className="reset-icon" />
@@ -312,7 +270,9 @@ class Kurrency extends Component {
       currencies: [],
       waitingForNewCurrency: -1,
       toCurrency: undefined,
+      toValue: "0",
       fromCurrency: undefined,
+      fromValue: "0",
       baseCurrency: new Currency("EUR", 1)
     }
   }
@@ -323,11 +283,81 @@ class Kurrency extends Component {
         this.buildExchangeRates(response)
         this.setLoading(false)
       }).catch((response) => {
+        console.log("The fetching of rates failed")
         console.log("response: ", response)
         this.setLoading(false)
       })
   }
 
+  render() {
+    const {
+      isLoading,
+      modalIsOpen,
+      currencies,
+      fromCurrency,
+      fromValue,
+      toCurrency,
+      toValue } = this.state
+    return (
+      <div className="container">
+
+        <Header isLoading={isLoading}></Header>
+        <Content
+          isLoading={isLoading}
+          fromCurrency={fromCurrency}
+          fromValue={fromValue}
+          toCurrency={toCurrency}
+          toValue={toValue}
+          handleValueChange={this.handleValueChange}
+          baseCurrency={this.state.baseCurrency}
+          changeCurrency={this.openModal}
+          swapCurrencies={this.swapCurrencies}
+          resetFields={this.resetFields}>
+        </Content>
+        <Modal
+          onClose={this.closeModal}
+          isShowing={modalIsOpen}
+          currencies={currencies}>
+        </Modal>
+        <Loader isLoading={isLoading}></Loader>
+        <Footer isLoading={isLoading} />
+      </div>
+    )
+  }
+
+  resetFields = () => {
+    const {currencies} = this.state
+    this.setState({
+      fromCurrency: currencies[0],
+      toCurrency: currencies[1],
+      fromValue:"",
+      toValue:""
+    })
+  }
+  handleValueChange = (event) => {
+    const { toCurrency, fromCurrency } = this.state
+    const { name, value } = event.target
+    const { data } = event.nativeEvent
+    if (data !== " " && (data >= 0 || data <= 9 || data === "," || data === ".")) {
+      let replaceComma = value.replace(",", ".")
+      switch (name) {
+        case "from-value":
+          this.setState({
+            fromValue: replaceComma,
+            toValue: utils.truncateValue(fromCurrency.exchange(replaceComma, toCurrency), 3)
+          })
+          break;
+        case "to-value":
+          this.setState({
+            toValue: replaceComma,
+            fromValue: utils.truncateValue(toCurrency.exchange(replaceComma, fromCurrency), 3)
+          })
+          break;
+        default:
+          console.log("Default, unused case. There was no matching field name.")
+      }
+    }
+  }
   setLoading = (state) => {
     this.setState({
       isLoading: state,
@@ -373,32 +403,48 @@ class Kurrency extends Component {
   }
 
   swapCurrencies = () => {
-    const { toCurrency, fromCurrency } = this.state
+    const { 
+      toCurrency,
+      toValue,
+      fromCurrency,
+      fromValue } = this.state
     this.setState({
       toCurrency: fromCurrency,
-      fromCurrency: toCurrency
+      fromCurrency: toCurrency,
+      toValue: fromValue,
+      fromValue: toValue
     })
   }
 
-  closeModal = (data) => {
-    const { waitingForNewCurrency } = this.state
+  closeModal = (newCurrency) => {
+    const { 
+      waitingForNewCurrency,
+      toValue,
+      fromValue,
+      toCurrency,
+      fromCurrency
+     } = this.state
+
     //Check that we get a declared var that is not undefined
     if (waitingForNewCurrency === -1) {
       console.log("Unknown receiver of selected currency")
       return
     }
 
-    if (typeof data !== 'undefined') {
-      //console.log("selected currency: ", data)
+    if (typeof newCurrency !== 'undefined') {
       switch (waitingForNewCurrency) {
+        //Updated the 'from currency'
         case 0:
           this.setState({
-            fromCurrency: data
+            fromCurrency: newCurrency,
+            fromValue: utils.truncateValue(toCurrency.exchange(toValue, newCurrency))
           })
           break;
+        //Updated the 'to currency'
         case 1:
           this.setState({
-            toCurrency: data
+            toCurrency: newCurrency,
+            toValue: utils.truncateValue(fromCurrency.exchange(fromValue, newCurrency),3)
           })
           break;
         default:
@@ -411,37 +457,6 @@ class Kurrency extends Component {
       waitingForNewCurrency: -1
     })
   }
-
-  render() {
-    const {
-      isLoading,
-      modalIsOpen,
-      currencies,
-      toCurrency,
-      fromCurrency } = this.state
-    return (
-      <div className="container">
-
-        <Header isLoading={isLoading}></Header>
-        <Content
-          isLoading={isLoading}
-          fromCurrency={fromCurrency}
-          toCurrency={toCurrency}
-          baseCurrency={this.state.baseCurrency}
-          changeCurrency={this.openModal}
-          swapCurrencies={this.swapCurrencies}>
-        </Content>
-        <Modal
-          onClose={this.closeModal}
-          isShowing={modalIsOpen}
-          currencies={currencies}>
-        </Modal>
-        <Loader isLoading={isLoading}></Loader>
-        <Footer isLoading={isLoading} />
-      </div>
-    )
-  }
-
 }
 
 export default Kurrency;
