@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/Kurrency/static/css/main.8f9ce23a.chunk.css",
-    "main.js": "/Kurrency/static/js/main.adad324d.chunk.js",
-    "main.js.map": "/Kurrency/static/js/main.adad324d.chunk.js.map",
+    "main.css": "/Kurrency/static/css/main.1e860f65.chunk.css",
+    "main.js": "/Kurrency/static/js/main.47092e13.chunk.js",
+    "main.js.map": "/Kurrency/static/js/main.47092e13.chunk.js.map",
     "runtime~main.js": "/Kurrency/static/js/runtime~main.1e5827ca.js",
     "runtime~main.js.map": "/Kurrency/static/js/runtime~main.1e5827ca.js.map",
     "static/js/2.657b752e.chunk.js": "/Kurrency/static/js/2.657b752e.chunk.js",
     "static/js/2.657b752e.chunk.js.map": "/Kurrency/static/js/2.657b752e.chunk.js.map",
     "index.html": "/Kurrency/index.html",
-    "precache-manifest.4980ac91c2784755b19fd72c36aeaf4f.js": "/Kurrency/precache-manifest.4980ac91c2784755b19fd72c36aeaf4f.js",
+    "precache-manifest.e94c001dcf95e9d96515b9a1c06b858e.js": "/Kurrency/precache-manifest.e94c001dcf95e9d96515b9a1c06b858e.js",
     "service-worker.js": "/Kurrency/service-worker.js",
-    "static/css/main.8f9ce23a.chunk.css.map": "/Kurrency/static/css/main.8f9ce23a.chunk.css.map"
+    "static/css/main.1e860f65.chunk.css.map": "/Kurrency/static/css/main.1e860f65.chunk.css.map"
   }
 }
