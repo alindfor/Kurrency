@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "7af70a8a234d4f189fcf4fd72fdb912c",
+    "revision": "e0c64c7bddd3b2c845a6928c256ae2b6",
     "url": "/Kurrency/index.html"
   },
   {
