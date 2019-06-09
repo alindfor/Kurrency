@@ -22,16 +22,6 @@ class Header extends Component {
         <h1 className="header-logo">
           Kurrency
         </h1>
-        <nav className="nav-container">
-          <ul className="nav-list">
-            <li className="nav-item">
-              Home
-            </li>
-            <li className="nav-item">
-              About
-            </li>
-          </ul>
-        </nav>
       </header>
     )
   }
@@ -119,8 +109,15 @@ class Loader extends Component {
     const { isLoading } = this.props
     return (
       <div className={isLoading ? "loader-container" : "loader-container hidden"}>
-        <span className="loader" />
-        <h1 className="loader-title">loading exchange rates...</h1>
+        <span className="loader-logo-container">
+          <h1 className="header-logo">Kurrency</h1>
+          <p className="loader-slogan">Your online currency converter</p>
+        </span>
+
+        <div className="loader-and-title-container">
+          <div className="loader" />
+          <h1 className="loader-title">loading exchange rates...</h1>
+        </div>
       </div>
     )
   }
@@ -278,6 +275,7 @@ class Kurrency extends Component {
   }
 
   componentDidMount() {
+
     api.getRates()
       .then((response) => {
         this.buildExchangeRates(response)
@@ -320,18 +318,20 @@ class Kurrency extends Component {
           currencies={currencies}>
         </Modal>
         <Loader isLoading={isLoading}></Loader>
+
         <Footer isLoading={isLoading} />
+
       </div>
     )
   }
 
   resetFields = () => {
-    const {currencies} = this.state
+    const { currencies } = this.state
     this.setState({
       fromCurrency: currencies[0],
       toCurrency: currencies[1],
-      fromValue:"",
-      toValue:""
+      fromValue: "",
+      toValue: ""
     })
   }
   handleValueChange = (event) => {
@@ -403,7 +403,7 @@ class Kurrency extends Component {
   }
 
   swapCurrencies = () => {
-    const { 
+    const {
       toCurrency,
       toValue,
       fromCurrency,
@@ -417,13 +417,13 @@ class Kurrency extends Component {
   }
 
   closeModal = (newCurrency) => {
-    const { 
+    const {
       waitingForNewCurrency,
       toValue,
       fromValue,
       toCurrency,
       fromCurrency
-     } = this.state
+    } = this.state
 
     //Check that we get a declared var that is not undefined
     if (waitingForNewCurrency === -1) {
@@ -444,7 +444,7 @@ class Kurrency extends Component {
         case 1:
           this.setState({
             toCurrency: newCurrency,
-            toValue: utils.truncateValue(fromCurrency.exchange(fromValue, newCurrency),3)
+            toValue: utils.truncateValue(fromCurrency.exchange(fromValue, newCurrency), 3)
           })
           break;
         default:
