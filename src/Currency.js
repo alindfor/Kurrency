@@ -5,6 +5,7 @@ export default class Currency {
     }
 
     exchange(amount, other) {
-        return (amount / this.rate) * other.rate
+        let result = (amount / this.rate) * other.rate
+        return result
     }
 }
