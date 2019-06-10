@@ -1,7 +1,7 @@
 # Kurrency
 A currency converter front end made with React.
 
-See it in action <a href="https://alindfor.github.io/Kurrency/" target="_blank" rel="noopener noreferrer">here</a>.
+See it in action [here](https://alindfor.github.io/Kurrency).
 
 ## Features
 * Fetches currency reates from [Exchange rates API](https://exchangeratesapi.io/).
