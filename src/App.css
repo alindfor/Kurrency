@@ -162,6 +162,7 @@ body {
   top:-30px
 
 }
+
 .loader-container .header-logo { 
   font-size: 50px;
   letter-spacing: 2.5px;
@@ -526,15 +527,32 @@ header {
 }
 
 .inner-footer p {
+  letter-spacing: 0.8px;
   font-weight: 300;
+  line-height: 20px;
+  margin-bottom: 6px
 }
 
 .inner-footer p a {
-  color: white
+  color: salmon;
+  text-decoration: none;
+  font-weight: 400;
+  position: relative;
+}
+.inner-footer p a::after { 
+  content:'';
+  position: absolute;
+  display: inline-block;
+  bottom:-1px;
+  left:1px;
+  right:1px;
+  height:1px;
+  border-radius: 12px;
+  background: salmon;
 }
 
-.inner-footer p+p {
-  margin-top: 6px
+.inner-footer p:last-child {
+  margin-bottom: 0;
 }
 
 input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
@@ -572,7 +590,8 @@ input[type="number"] {
     padding: 12px 12px;
   }
   .inner-footer p {
-    font-size: 12px
+    font-size: 12px;
+    line-height: 16px
   }
   .input-container {
     height: 60px
@@ -722,6 +741,13 @@ input[type="number"] {
 
   .loader-slogan {
     font-size: 14px
+  }
+
+  .inner-footer p a {
+    text-decoration:underline;
+  }
+  .inner-footer p a::after { 
+    display: none
   }
   
 }

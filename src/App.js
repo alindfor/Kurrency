@@ -129,6 +129,7 @@ class Footer extends Component {
     return (
       <footer className={isLoading ? "footer hidden" : "footer"}>
         <div className="inner-footer">
+          <p> View the source code on <a href="https://www.github.com/alindfor/Kurrency/" target="_blank" rel="noopener noreferrer">GitHub</a></p>
           <p>Made with ReactJS by <a href="https://github.com/alindfor/" target="_blank" rel="noreferrer noopener">Alexander Lindfors</a>, 2019</p>
           <p>The currency exchange rates are fetched using <a href="https://exchangeratesapi.io/" target="_blank" rel="noreferrer noopener">Exchange Rates API</a></p>
         </div>
