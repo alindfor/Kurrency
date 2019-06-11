@@ -5,6 +5,7 @@
   "homepage": "http://alindfor.github.io/Kurrency",
   "dependencies": {
     "axios": "^0.19.0",
+    "currency-flags": "git+https://github.com/transferwise/currency-flags.git",
     "gh-pages": "^2.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

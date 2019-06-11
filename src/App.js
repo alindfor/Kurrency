@@ -1,107 +1,94 @@
 import React, { Component } from 'react';
 import './App.css';
-
+import 'currency-flags/dist/currency-flags.css'
 import {
   FaExchangeAlt,
   FaBars,
   FaPlus,
   FaUndoAlt,
+  FaSearch,
 } from 'react-icons/fa'
 
 import api from './api'
 import utils from './utils/common'
-
+import currencies_data from './data/currencies'
 import Currency from './Currency'
 
-class Header extends Component {
-
-  render() {
-    const { isLoading } = this.props
-    return (
-      <header className={isLoading ? "header-container hidden" : "header-container"}>
-        <h1 className="header-logo">
-          Kurrency
+function Header({ isLoading }) {
+  return (
+    <header className={isLoading ? "header-container hidden" : "header-container"}>
+      <h1 className="header-logo">
+        Kurrency
         </h1>
-      </header>
-    )
-  }
+    </header>
+  )
 }
 
-class Content extends Component {
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      baseCurrency: this.props.baseCurrency
-    }
-  }
-
-  render() {
-    const { isLoading, toCurrency, fromCurrency } = this.props
-    return (
-      <section className={isLoading ? "content-container hidden" : "content-container"}>
-        <div className="inner-container">
-          <div className="input-container">
-            <input
-              className="currency-input"
-              spellCheck="false"
-              placeholder="0"
-              name="from-value"
-              onChange={this.props.handleValueChange}
-              value={this.props.fromValue}
-            />
-            <button className="currency-button" name="from-currency" onClick={this.props.changeCurrency}>
-              <span className="currency-button-text">
-                {fromCurrency ? fromCurrency.name : "USD"}
-              </span>
-              <span className="currency-button-icon-container" >
-                <FaBars className="currency-button-icon" />
-              </span>
-            </button>
-          </div>
-
-          <div className="change-currency-container">
-            <span className="change-icon-container" onClick={this.props.swapCurrencies}>
-              <FaExchangeAlt className="change-icon" />
+function Content(props) {
+  const { isLoading, toCurrency, fromCurrency } = props
+  return (
+    <section className={isLoading ? "content-container hidden" : "content-container"}>
+      <div className="inner-container">
+        <div className="input-container">
+          <input
+            className="currency-input"
+            spellCheck="false"
+            placeholder="0"
+            name="from-value"
+            onChange={props.handleValueChange}
+            value={props.fromValue}
+          />
+          <button className="currency-button" name="from-currency" onClick={props.changeCurrency}>
+            <span className="currency-button-text">
+              {fromCurrency ? fromCurrency.symbol : "USD"}
             </span>
-          </div>
-
-          <div className="input-container">
-            <input
-              className="currency-input"
-              spellCheck="false"
-              placeholder="0"
-              name="to-value"
-              onChange={this.props.handleValueChange}
-              value={this.props.toValue}
-            />
-            <button className="currency-button" name="to-currency" onClick={this.props.changeCurrency}>
-              <span className="currency-button-text">
-                {toCurrency ? toCurrency.name : "USD"}
-              </span>
-              <span className="currency-button-icon-container">
-                <FaBars className="currency-button-icon" />
-              </span>
-            </button>
-          </div>
-          <div className="result-info-container">
-            <p className="result-info">
-              1 {fromCurrency ? fromCurrency.name : "USD"} is {fromCurrency ? utils.truncateValue(fromCurrency.exchange(1, toCurrency), 8) : "0"} {toCurrency ? toCurrency.name : "SEK"}
-            </p>
-          </div>
-          <div className="reset-container">
-            <button className="reset-button" onClick={this.props.resetFields}>
-              <span className="reset-text">Reset</span>
-              <span className="reset-icon-container">
-                <FaUndoAlt className="reset-icon" />
-              </span>
-            </button>
-          </div>
+            <span className="currency-button-icon-container" >
+              <FaBars className="currency-button-icon" />
+            </span>
+          </button>
         </div>
 
-      </section>
-    )
-  }
+        <div className="change-currency-container">
+          <span className="change-icon-container" onClick={props.swapCurrencies}>
+            <FaExchangeAlt className="change-icon" />
+          </span>
+        </div>
+
+        <div className="input-container">
+          <input
+            className="currency-input"
+            spellCheck="false"
+            placeholder="0"
+            name="to-value"
+            onChange={props.handleValueChange}
+            value={props.toValue}
+          />
+          <button className="currency-button" name="to-currency" onClick={props.changeCurrency}>
+            <span className="currency-button-text">
+              {toCurrency ? toCurrency.symbol : "USD"}
+            </span>
+            <span className="currency-button-icon-container">
+              <FaBars className="currency-button-icon" />
+            </span>
+          </button>
+        </div>
+        <div className="result-info-container">
+          <p className="result-info">
+            1 {fromCurrency ? fromCurrency.symbol : "USD"} is {fromCurrency ? utils.truncateValue(fromCurrency.exchange(1, toCurrency), 8) : "0"} {toCurrency ? toCurrency.symbol : "SEK"}
+          </p>
+        </div>
+        <div className="reset-container">
+          <button className="reset-button" onClick={props.resetFields}>
+            <span className="reset-text">Reset</span>
+            <span className="reset-icon-container">
+              <FaUndoAlt className="reset-icon" />
+            </span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+  )
 }
 
 class Loader extends Component {
@@ -190,10 +177,9 @@ class Modal extends Component {
       })
     } else {
       //Filter the list on the search text)
-      let updatedFilter = unfilteredCurrencies.filter((item) => {
-        const { name } = item
-        let uppercaseFilter = filter.toUpperCase()
-        return name.includes(uppercaseFilter)
+      let updatedFilter = unfilteredCurrencies.filter((currency) => {
+        let containsFilter = currency.contains(filter)
+        return containsFilter
       })
       this.setState({
         filteredCurrencies: updatedFilter
@@ -202,11 +188,13 @@ class Modal extends Component {
   }
   updateText = (event) => {
 
-    this.setState({
-      filter: event.target.value
-    }, () => {
-      this.filterCurrencies()
-    })
+    if (this.props.isShowing) {
+      this.setState({
+        filter: event.target.value
+      }, () => {
+        this.filterCurrencies()
+      })
+    }
   }
 
   closeModal = (data) => {
@@ -226,27 +214,37 @@ class Modal extends Component {
 
     const { isShowing } = this.props
     const { filter, filteredCurrencies } = this.state
+    if (isShowing) {
+      this.currencySearchField.focus()
+    }
     return (
       <div className={isShowing ? "modal-container" : "modal-container hidden"}>
         <div className="modal">
           <div className="close-modal-container">
             <FaPlus className="close-modal-icon" onClick={() => this.closeModal()} />
           </div>
-          <input
-            autoFocus={true}
-            className="currency-search"
-            autoCorrect="false"
-            type="text"
-            placeholder="Filter currencies.."
-            value={filter}
-            onChange={this.updateText}
-          ></input>
+          <div className="currency-search-container">
+            <FaSearch className="currency-search-icon" />
+            <input
+              ref={(ref) => this.currencySearchField = ref}
+              className="currency-search"
+              autoCorrect="false"
+              type="text"
+              placeholder="Enter a currency or a country.."
+              value={filter}
+              onChange={this.updateText}
+            ></input>
+          </div>
           <div className="currencies-container" ref={(ref) => this.currenciesList = ref}>
             <ul className="currencies-list">
               {filteredCurrencies.map((item, index) => {
                 return (
                   <li key={index} className="currency-item" onClick={() => this.closeModal(index)}>
-                    <p>{item.name}</p>
+                    <div className={`currency-flag currency-flag-xl currency-flag-${item.symbol.toLowerCase()}`}></div>
+                    <div>
+                      <p className="currency-list-symbol">{item.symbol}</p>
+                      <p className="currency-list-name">{item.name}</p>
+                    </div>
                   </li>
                 )
               })}
@@ -270,8 +268,7 @@ class Kurrency extends Component {
       toCurrency: undefined,
       toValue: "0",
       fromCurrency: undefined,
-      fromValue: "0",
-      baseCurrency: new Currency("EUR", 1)
+      fromValue: "0"
     }
   }
 
@@ -308,7 +305,6 @@ class Kurrency extends Component {
           toCurrency={toCurrency}
           toValue={toValue}
           handleValueChange={this.handleValueChange}
-          baseCurrency={this.state.baseCurrency}
           changeCurrency={this.openModal}
           swapCurrencies={this.swapCurrencies}
           resetFields={this.resetFields}>
@@ -368,13 +364,19 @@ class Kurrency extends Component {
   buildExchangeRates = (rates) => {
     let ratesArray = Object.entries(rates)
     var currencies = []
-    ratesArray.forEach((rate) => {
-      let tempCurrency = new Currency(rate[0], rate[1])
-      currencies.push(tempCurrency)
+    ratesArray.forEach((currency) => {
+      let symbol = currency[0]
+      let rate = currency[1]
+      let currencyData = currencies_data[symbol]
+      let country = currencyData.country
+      let currencyName = currencyData.currency
+      let newCurrency = new Currency(symbol, currencyName, rate, country)
+      currencies.push(newCurrency)
     })
 
     //We need to add EUR, the base currency, manually
-    currencies.push(this.state.baseCurrency)
+    let baseCurrency = new Currency("EUR", "Euro", 1, "Europe")
+    currencies.push(baseCurrency)
     this.setState({
       currencies: currencies,
       fromCurrency: currencies[0],
