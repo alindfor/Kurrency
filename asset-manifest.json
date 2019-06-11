@@ -1,15 +1,17 @@
 {
   "files": {
-    "main.css": "/Kurrency/static/css/main.6ade436c.chunk.css",
-    "main.js": "/Kurrency/static/js/main.ba8f4698.chunk.js",
-    "main.js.map": "/Kurrency/static/js/main.ba8f4698.chunk.js.map",
+    "main.css": "/Kurrency/static/css/main.2b69627a.chunk.css",
+    "main.js": "/Kurrency/static/js/main.da81b6a5.chunk.js",
+    "main.js.map": "/Kurrency/static/js/main.da81b6a5.chunk.js.map",
     "runtime~main.js": "/Kurrency/static/js/runtime~main.1e5827ca.js",
     "runtime~main.js.map": "/Kurrency/static/js/runtime~main.1e5827ca.js.map",
-    "static/js/2.657b752e.chunk.js": "/Kurrency/static/js/2.657b752e.chunk.js",
-    "static/js/2.657b752e.chunk.js.map": "/Kurrency/static/js/2.657b752e.chunk.js.map",
+    "static/css/2.f76222c6.chunk.css": "/Kurrency/static/css/2.f76222c6.chunk.css",
+    "static/js/2.32a2a2e6.chunk.js": "/Kurrency/static/js/2.32a2a2e6.chunk.js",
+    "static/js/2.32a2a2e6.chunk.js.map": "/Kurrency/static/js/2.32a2a2e6.chunk.js.map",
     "index.html": "/Kurrency/index.html",
-    "precache-manifest.9d22e4ab9d2992df3cc2ee7506e1ca8d.js": "/Kurrency/precache-manifest.9d22e4ab9d2992df3cc2ee7506e1ca8d.js",
+    "precache-manifest.b4c3c781cffc7462974e0598c1065ef2.js": "/Kurrency/precache-manifest.b4c3c781cffc7462974e0598c1065ef2.js",
     "service-worker.js": "/Kurrency/service-worker.js",
-    "static/css/main.6ade436c.chunk.css.map": "/Kurrency/static/css/main.6ade436c.chunk.css.map"
+    "static/css/2.f76222c6.chunk.css.map": "/Kurrency/static/css/2.f76222c6.chunk.css.map",
+    "static/css/main.2b69627a.chunk.css.map": "/Kurrency/static/css/main.2b69627a.chunk.css.map"
   }
 }
